@@ -34,5 +34,5 @@ CelebrityMaker es una aplicación de fusión de rostros de celebridades, impulsa
    ```
 3. Ejecutar app de streamlit:
    ```bash
-   streamlit run prod\app.py
+   streamlit run prod/app.py
    ```

@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from torchvision import datasets, transforms
 import matplotlib.pyplot as plt
 
-def load_dataset(path='../data/preprocesed_images'):
+def load_dataset(path='data/preprocesed_images'):
     return datasets.ImageFolder(root=path, transform = transforms.Compose([
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.Resize((64, 64)),
@@ -13,7 +13,7 @@ def load_dataset(path='../data/preprocesed_images'):
     transforms.ConvertImageDtype(torch.float),
 ]))
 
-def load_model(model, checkpoint_path='preprocessed_weights.pth', device='cpu'):
+def load_model(model, checkpoint_path='prod/preprocessed_weights.pth', device='cpu'):
     model.load_state_dict(torch.load(checkpoint_path, map_location=device))
     model.to(device)
     model.eval()
