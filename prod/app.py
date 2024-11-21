@@ -9,7 +9,7 @@ import torchvision.transforms as T
 
 # Configurar el título de la aplicación
 st.title("Celebrity Maker")
-st.write("¿Nunca te preguntaste como sería el hijo entre dos famosos? ¡Selecciona 2 y averigualo!")
+st.write("¿Nunca te preguntaste cómo sería el hijo entre dos famosos? ¡Selecciona 2 y averigualo!")
 
 # Cargar el modelo y los datos
 model = VAE().to("cpu")
@@ -20,8 +20,6 @@ dataset = load_dataset()
 
 # Obtener nombres de actores desde las carpetas en el dataset
 actor_names = sorted(dataset.classes)
-
-# Limpiar los nombres de los actores eliminando los guiones bajos
 clean_actor_names = [name.replace('_', ' ') for name in actor_names]
 
 # Función para mostrar una imagen específica de un actor seleccionado
@@ -37,6 +35,10 @@ def display_specific_actor_image(actor_name, image_number):
 # Crear tres columnas: Actor 1, Fusión, Actor 2
 col1, col2, col3 = st.columns([1.5, 1.5, 1.5])
 
+# Variables para las imágenes seleccionadas
+actor1 = actor2 = None
+image_number1 = image_number2 = 1
+
 # Columna para el Actor 1
 with col1:
     st.header("Famoso nº 1")
@@ -51,23 +53,20 @@ with col3:
     image_number2 = st.selectbox("Selecciona la imagen", [f"Imagen {i+1}" for i in range(10)], key="img_select_actor2")
     actor2_image = display_specific_actor_image(actor2, int(image_number2.split()[1]))
 
-# Columna central para la intensidad de fusión y el botón de interpolación
+# Columna central para el slider y las imágenes generadas
 with col2:
     st.header("¡Fusión!")
-    intensity = st.slider("Intensidad de la fusión", min_value=1, max_value=10, value=5) - 1
     to_pil = T.ToPILImage()
 
-    # Botón para generar la interpolación
-    if st.button("Fusionar"):
-        if actor1_image and actor2_image:
-            with st.spinner("Fusionando..."):
-                start_idx = actor_names.index(actor1.replace(' ', '_')) * 10 + int(image_number1.split()[1]) - 1
-                end_idx = actor_names.index(actor2.replace(' ', '_')) * 10 + int(image_number2.split()[1]) - 1
-                interpolated_images = model_interp(model, dataset, start_idx, end_idx, size=10)
-                
-                # Seleccionar y mostrar la imagen interpolada según la intensidad
-                selected_image_tensor = interpolated_images[intensity]
-                selected_image_pil = to_pil(selected_image_tensor)
-                st.image(selected_image_pil, caption=f"Interpolación con intensidad {intensity + 1}", use_container_width=True)
-        else:
-            st.warning("Por favor, selecciona una imagen para ambos famosos antes de generar la fusión.")
+    # Comprobar si hay imágenes seleccionadas
+    if actor1_image and actor2_image:
+        with st.spinner("Generando fusión..."):
+            start_idx = actor_names.index(actor1.replace(' ', '_')) * 10 + int(image_number1.split()[1]) - 1
+            end_idx = actor_names.index(actor2.replace(' ', '_')) * 10 + int(image_number2.split()[1]) - 1
+            interpolated_images = model_interp(model, dataset, start_idx, end_idx, size=10)
+
+            # Mostrar las imágenes generadas en un slider
+            intensity = st.slider("Desliza para ver las imágenes generadas", min_value=1, max_value=10, value=5) - 1
+            selected_image_tensor = interpolated_images[intensity]
+            selected_image_pil = to_pil(selected_image_tensor)
+            st.image(selected_image_pil, caption=f"Intensidad de fusión {intensity + 1}", use_container_width=True)

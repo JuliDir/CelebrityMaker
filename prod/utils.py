@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 
 def load_dataset(path='data/preprocesed_images'):
     return datasets.ImageFolder(root=path, transform = transforms.Compose([
-    transforms.RandomHorizontalFlip(p=0.5),
     transforms.Resize((64, 64)),
     transforms.ToTensor(),
     transforms.ConvertImageDtype(torch.float),
