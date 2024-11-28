@@ -6,7 +6,7 @@
 ¿Alguna vez quisiste combinar los rostros de tus celebridades favoritas en una sola imagen? **CelebrityMaker** te permite hacerlo realidad gracias al poder de las redes neuronales profundas. Este proyecto utiliza un Autoencoder Variacional (VAE) para generar imágenes realistas que combinan características de dos celebridades seleccionadas por el usuario.
 
 <p align="center">
-  <img src="./data/celebrity_fusion_example.png" alt="Ejemplo de fusión de rostros de celebridades" width="600">
+  <img src="./data/example.png" alt="Ejemplo de fusión de rostros de celebridades" width="600">
 </p>
 
 **¿Listo para experimentar con combinaciones únicas?** 👉 [Prueba CelebrityMaker aquí](https://celebritymaker.streamlit.app/)
